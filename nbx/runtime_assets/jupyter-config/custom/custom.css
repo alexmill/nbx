@@ -320,7 +320,7 @@ body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
   gap: 5px;
   position: absolute;
   top: 6px;
-  right: 8px;
+  left: 8px;
   z-index: 10;
 }
 

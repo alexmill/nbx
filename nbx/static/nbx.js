@@ -297,7 +297,7 @@
     const rect = anchorBtn.getBoundingClientRect();
     dropdown.style.position = "fixed";
     dropdown.style.top = (rect.bottom + 4) + "px";
-    dropdown.style.right = (window.innerWidth - rect.right) + "px";
+    dropdown.style.left = rect.left + "px";
 
     const dismiss = (e) => {
       if (!dropdown.contains(e.target) && e.target !== anchorBtn) {
