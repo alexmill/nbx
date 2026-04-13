@@ -295,6 +295,24 @@
       dropdown.appendChild(item);
     }
 
+    const hasCustomMax = currentTags.some((t) => t.match(/^nbx-fig-max-\d+px$/));
+    if (!hasCustomMax) {
+      const maxItem = document.createElement("button");
+      maxItem.className = "nbx-tag-dropdown-item";
+      maxItem.type = "button";
+      maxItem.textContent = "Fig max\u2026";
+      maxItem.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.remove();
+        const px = window.prompt("Max width in pixels:", "1200");
+        if (px && /^\d+$/.test(px.trim())) {
+          addCellTag(cellWidget, "nbx-fig-max-" + px.trim() + "px");
+          syncTagBar(cellWidget);
+        }
+      });
+      dropdown.appendChild(maxItem);
+    }
+
     document.body.appendChild(dropdown);
 
     const rect = anchorBtn.getBoundingClientRect();

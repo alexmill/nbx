@@ -239,23 +239,37 @@ body.nbx-published {
 
 /* --- Figure modes — common chrome strip for all nbx-fig-* cells --- */
 
-.nbx-published [class*="celltag_nbx-fig-"] {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+.nbx-published [class*="celltag_nbx-fig-"],
+.nbx-published .celltag_nbx-wide {
   overflow: visible;
   border: none;
   background: none;
   box-shadow: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Breakout centering — only for modes that escape the parent width */
+.nbx-published .celltag_nbx-fig-hero,
+.nbx-published .celltag_nbx-fig-fullscreen,
+.nbx-published .celltag_nbx-wide,
+.nbx-published [class*="celltag_nbx-fig-max-"] {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .nbx-published [class*="celltag_nbx-fig-"] > .jp-Cell-outputWrapper,
 .nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea,
-.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-output {
+.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-output,
+.nbx-published .celltag_nbx-wide > .jp-Cell-outputWrapper,
+.nbx-published .celltag_nbx-wide .jp-OutputArea,
+.nbx-published .celltag_nbx-wide .jp-OutputArea-output {
   overflow: visible;
 }
 
-.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-child {
+.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-child,
+.nbx-published .celltag_nbx-wide .jp-OutputArea-child {
   border: none;
   padding: 0;
   margin: 0;
@@ -265,7 +279,10 @@ body.nbx-published {
 
 .nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedImage img,
 .nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedSVG img,
-.nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedHTML img {
+.nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedHTML img,
+.nbx-published .celltag_nbx-wide .jp-RenderedImage img,
+.nbx-published .celltag_nbx-wide .jp-RenderedSVG img,
+.nbx-published .celltag_nbx-wide .jp-RenderedHTML img {
   width: 100%;
   max-width: 100%;
   border-radius: 14px;
