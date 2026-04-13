@@ -18,17 +18,17 @@
   {%- endif %}
   <style>
     {%- if fonts.get('serif') %}
-    .nbx-published,
-    .nbx-published .jp-RenderedMarkdown,
     .nbx-published .jp-RenderedMarkdown h1,
     .nbx-published .jp-RenderedMarkdown h2,
     .nbx-published .jp-RenderedMarkdown h3,
     .nbx-published .jp-RenderedMarkdown h4,
-    .nbx-published-title,
-    .nbx-published-dek,
-    .nbx-figcaption { font-family: "{{ fonts.serif }}", Georgia, serif; }
+    .nbx-published-title { font-family: "{{ fonts.serif }}", Georgia, serif; }
     {%- endif %}
     {%- if fonts.get('sans') %}
+    .nbx-published,
+    .nbx-published .jp-RenderedMarkdown,
+    .nbx-published-dek,
+    .nbx-figcaption,
     .nbx-published-eyebrow,
     .nbx-collapse-toggle,
     .nbx-published .jp-InputArea-prompt,
