@@ -24,6 +24,7 @@ body[data-jp-theme-name="NBX"] {
   --jp-toolbar-background: rgba(251, 251, 248, 0.78);
   --jp-toolbar-border-color: rgba(60, 72, 79, 0.1);
   --jp-toolbar-box-shadow: 0 10px 24px rgba(20, 25, 29, 0.05);
+  --jp-editor-cursor-color: var(--jp-ui-font-color0);
   background:
     radial-gradient(circle at top, rgba(114, 134, 146, 0.08), transparent 32rem),
     linear-gradient(180deg, #f6f5f2 0%, #f1f0ec 100%);
