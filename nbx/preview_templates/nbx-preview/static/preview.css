@@ -125,6 +125,16 @@ body.nbx-published {
   overflow: hidden;
 }
 
+/* Hide code input by default — preview is a published view */
+.nbx-published .jp-CodeCell > .jp-Cell-inputWrapper {
+  display: none;
+}
+
+/* Reveal code input inside collapsed cells so the toggle is useful */
+.nbx-collapsed-cell .jp-CodeCell > .jp-Cell-inputWrapper {
+  display: block;
+}
+
 .nbx-published .jp-InputArea,
 .nbx-published .jp-OutputArea-child {
   background: transparent;
@@ -229,13 +239,31 @@ body.nbx-published {
 /* --- Wide/breakout cells (nbx-wide tag) --- */
 
 .nbx-published .celltag_nbx-wide {
-  width: min(100% - 64px, 1400px);
+  width: min(100% - 32px, 1400px);
+  overflow: visible;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.nbx-published .celltag_nbx-wide > .jp-Cell-outputWrapper {
+  overflow: visible;
+}
+
+.nbx-published .celltag_nbx-wide .jp-OutputArea-child {
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  background: none;
 }
 
 .nbx-published .celltag_nbx-wide .jp-RenderedImage img,
 .nbx-published .celltag_nbx-wide .jp-RenderedSVG img,
 .nbx-published .celltag_nbx-wide .jp-RenderedHTML img {
+  width: 100%;
   max-width: 100%;
+  border-radius: 14px;
 }
 
 @media (max-width: 900px) {
