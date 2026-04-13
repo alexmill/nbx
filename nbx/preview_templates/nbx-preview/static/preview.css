@@ -216,6 +216,16 @@ body.nbx-published {
   margin: 0;
 }
 
+/* --- Partial cell hiding (nbx-hide-input / nbx-hide-output tags) --- */
+
+.celltag_nbx-hide-input > .jp-Cell-inputWrapper {
+  display: none;
+}
+
+.celltag_nbx-hide-output > .jp-Cell-outputWrapper {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .nbx-published-shell {
     width: min(100vw - 20px, 1600px);

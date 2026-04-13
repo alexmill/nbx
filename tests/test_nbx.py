@@ -188,6 +188,24 @@ class PreviewTests(unittest.TestCase):
         self.assertIn("Show code", html)
         self.assertIn("collapsed_code", html)
 
+    def test_nbx_hide_input_tag_adds_celltag_class(self) -> None:
+        notebook = nbformat.v4.new_notebook()
+        notebook.metadata["title"] = "Hide Input Test"
+        notebook.cells = [
+            nbformat.v4.new_code_cell("hidden_input_code()"),
+        ]
+        notebook.cells[0].metadata["tags"] = ["nbx-hide-input"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_root = Path(temp_dir)
+            notebook_path = project_root / "post.ipynb"
+            nbformat.write(notebook, notebook_path)
+            paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+            html = render_notebook_preview(notebook_path.name, paths=paths)
+
+        self.assertIn("celltag_nbx-hide-input", html)
+
     def test_resolve_notebook_path_rejects_paths_outside_project_root(self) -> None:
         with tempfile.TemporaryDirectory() as project_dir, tempfile.TemporaryDirectory() as other_dir:
             project_root = Path(project_dir)
