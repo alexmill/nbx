@@ -128,8 +128,91 @@ def build_command(
     return command
 
 
+def render_to_html(notebook_path: Path, output_path: Path | None = None) -> Path:
+    """Render a notebook to static HTML using the nbx-preview template."""
+    from .preview import render_notebook_preview
+
+    resolved = notebook_path.resolve()
+    paths = project_paths(project_root=resolved.parent)
+    html = render_notebook_preview(resolved.name, paths=paths)
+
+    if output_path is None:
+        output_path = resolved.with_suffix(".html")
+
+    output_path.write_text(html, encoding="utf-8")
+    return output_path
+
+
+def tag_all_hidden(notebook_path: Path) -> None:
+    """Add 'nbx-hide' tag to every code cell that doesn't already have an nbx-fig-* or nbx-collapse tag."""
+    import nbformat
+
+    resolved = notebook_path.resolve()
+    notebook = nbformat.read(resolved, as_version=4)
+
+    for cell in notebook.cells:
+        if cell.cell_type != "code":
+            continue
+        tags = list(cell.metadata.get("tags", []))
+        if "nbx-hide" in tags:
+            continue
+        tags.append("nbx-hide")
+        cell.metadata["tags"] = tags
+
+    nbformat.write(notebook, resolved)
+    print(f"Tagged {sum(1 for c in notebook.cells if c.cell_type == 'code')} code cells with nbx-hide")
+
+
 def main(argv: list[str] | None = None) -> int:
-    parsed = parse_args(sys.argv[1:] if argv is None else argv)
+    args = sys.argv[1:] if argv is None else argv
+
+    if args and args[0] == "render":
+        render_args = args[1:]
+        if not render_args or render_args[0] in ("-h", "--help"):
+            print("Usage: nbx render <notebook.ipynb> [-o output.html] [--watch]")
+            return 0
+
+        nb_path = Path(render_args[0])
+        out_path = None
+        watch = "--watch" in render_args
+
+        remaining = [a for a in render_args[1:] if a != "--watch"]
+        if "-o" in remaining:
+            idx = remaining.index("-o")
+            if idx + 1 < len(remaining):
+                out_path = Path(remaining[idx + 1])
+
+        result = render_to_html(nb_path, out_path)
+        print(result)
+
+        if watch:
+            import time
+
+            resolved = nb_path.resolve()
+            last_mtime = resolved.stat().st_mtime
+            print(f"Watching {resolved.name} for changes... (Ctrl+C to stop)")
+            try:
+                while True:
+                    time.sleep(1)
+                    current_mtime = resolved.stat().st_mtime
+                    if current_mtime != last_mtime:
+                        last_mtime = current_mtime
+                        result = render_to_html(nb_path, out_path)
+                        print(f"Re-rendered → {result}")
+            except KeyboardInterrupt:
+                print("\nStopped watching.")
+
+        return 0
+
+    if args and args[0] == "hide-all":
+        hide_args = args[1:]
+        if not hide_args or hide_args[0] in ("-h", "--help"):
+            print("Usage: nbx hide-all <notebook.ipynb>")
+            return 0
+        tag_all_hidden(Path(hide_args[0]))
+        return 0
+
+    parsed = parse_args(args)
     paths = ensure_runtime_directories(project_paths(project_root=parsed.project_root))
 
     if parsed.help:
