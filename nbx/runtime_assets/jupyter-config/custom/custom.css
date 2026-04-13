@@ -184,7 +184,7 @@ body[data-jp-theme-name="NBX"] .jp-Notebook-cell {
 }
 
 body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell {
-  width: min(100% - 64px, 780px);
+  width: min(100% - 64px, 1280px);
 }
 
 body[data-jp-theme-name="NBX"] .jp-Cell.jp-CodeCell {
