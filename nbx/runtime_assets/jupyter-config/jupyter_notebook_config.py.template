@@ -1,0 +1,3 @@
+c.JupyterNotebookApp.custom_css = True
+c.JupyterNotebookApp.expose_app_in_browser = True
+c.JupyterNotebookApp.templates_dir = __NOTEBOOK_TEMPLATES_DIR__

@@ -1,0 +1,2 @@
+c.ServerApp.jpserver_extensions = {"nbx": True}
+c.ServerApp.root_dir = __PROJECT_ROOT__

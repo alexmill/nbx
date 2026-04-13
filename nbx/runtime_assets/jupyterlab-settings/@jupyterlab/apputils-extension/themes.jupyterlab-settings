@@ -1,0 +1,14 @@
+{
+    // Theme
+    // @jupyterlab/apputils-extension:themes
+    // Theme manager settings.
+    // *************************************
+
+    // Preferred Light Theme
+    // Application-level light visual styling theme. Ignored when Adaptive Theme is disabled.
+    "preferred-light-theme": "NBX",
+
+    // Selected Theme
+    // Application-level visual styling theme. Ignored when Adaptive Theme is disabled.
+    "theme": "NBX"
+}

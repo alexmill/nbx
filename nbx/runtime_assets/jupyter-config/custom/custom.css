@@ -1,0 +1,331 @@
+body[data-jp-theme-name="NBX"] {
+  --jp-border-radius: 16px;
+  --jp-ui-font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+  --jp-content-font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --jp-code-font-family: "Iosevka", "SFMono-Regular", "JetBrains Mono", monospace;
+  --jp-layout-color0: #f4f3f0;
+  --jp-layout-color1: #fbfbf8;
+  --jp-layout-color2: #f0f0ec;
+  --jp-layout-color3: #e3e2dd;
+  --jp-layout-color4: #d0cfc8;
+  --jp-brand-color1: #3c6270;
+  --jp-brand-color2: #547b88;
+  --jp-border-color1: rgba(45, 53, 59, 0.14);
+  --jp-border-color2: rgba(45, 53, 59, 0.1);
+  --jp-ui-font-color0: #1f2529;
+  --jp-ui-font-color1: #445058;
+  --jp-ui-font-color2: #6b7378;
+  --jp-content-font-color0: #1f2428;
+  --jp-content-font-color1: #2e353a;
+  --jp-content-font-color2: #6a7075;
+  --jp-cell-editor-background: rgba(251, 251, 248, 0.88);
+  --jp-cell-editor-border-color: rgba(60, 72, 79, 0.14);
+  --jp-cell-prompt-width: 68px;
+  --jp-toolbar-background: rgba(251, 251, 248, 0.78);
+  --jp-toolbar-border-color: rgba(60, 72, 79, 0.1);
+  --jp-toolbar-box-shadow: 0 10px 24px rgba(20, 25, 29, 0.05);
+  background:
+    radial-gradient(circle at top, rgba(114, 134, 146, 0.08), transparent 32rem),
+    linear-gradient(180deg, #f6f5f2 0%, #f1f0ec 100%);
+}
+
+body[data-jp-theme-name="NBX"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.12)),
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.18), transparent 28%);
+  opacity: 0.7;
+}
+
+body[data-jp-theme-name="NBX"] #jp-top-bar,
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel-toolbar,
+body[data-jp-theme-name="NBX"] .jp-SideBar,
+body[data-jp-theme-name="NBX"] .jp-MenuBar,
+body[data-jp-theme-name="NBX"] .lm-TabBar-content,
+body[data-jp-theme-name="NBX"] .jp-Dialog-content,
+body[data-jp-theme-name="NBX"] .lm-CommandPalette {
+  backdrop-filter: blur(24px);
+}
+
+body[data-jp-theme-name="NBX"] #jp-top-bar {
+  display: none;
+}
+
+body[data-jp-theme-name="NBX"].jp-ThemedContainer {
+  min-height: 100vh;
+  overflow: auto;
+}
+
+body[data-jp-theme-name="NBX"] .jp-LabShell {
+  position: static;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+body[data-jp-theme-name="NBX"] #jp-main-dock-panel {
+  min-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MainAreaWidget,
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel {
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel .jp-WindowedPanel-outer,
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel .jp-WindowedPanel-inner,
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel .jp-WindowedPanel-window {
+  min-height: 100%;
+}
+
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel .jp-WindowedPanel-outer {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel .jp-WindowedPanel-window {
+  position: static !important;
+  inset: auto !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+body[data-jp-theme-name="NBX"] .jp-SideBar,
+body[data-jp-theme-name="NBX"] .jp-MainMenu,
+body[data-jp-theme-name="NBX"] .jp-FileBrowser,
+body[data-jp-theme-name="NBX"] .jp-Dialog-content,
+body[data-jp-theme-name="NBX"] .lm-Menu,
+body[data-jp-theme-name="NBX"] .lm-CommandPalette {
+  background: rgba(250, 250, 247, 0.84);
+  border-color: rgba(45, 53, 59, 0.08);
+  box-shadow: 0 16px 36px rgba(20, 25, 29, 0.05);
+}
+
+body[data-jp-theme-name="NBX"] .lm-TabBar-tab,
+body[data-jp-theme-name="NBX"] .jp-MenuBar-item,
+body[data-jp-theme-name="NBX"] .lm-CommandPalette-item {
+  border-radius: 14px;
+}
+
+body[data-jp-theme-name="NBX"] .lm-TabBar-tab.lm-mod-current {
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 6px 18px rgba(20, 25, 29, 0.05);
+}
+
+body[data-jp-theme-name="NBX"] .jp-NotebookPanel-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 8px 10px;
+  margin: 4px auto 6px;
+  width: min(100% - 36px, 1600px);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  min-height: 0;
+}
+
+body[data-jp-theme-name="NBX"] .jp-nbx-author-toolbar > .jp-Toolbar-item:not(.jp-nbx-toolbar-shell) {
+  display: none;
+}
+
+body[data-jp-theme-name="NBX"] .jp-nbx-toolbar-shell {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid rgba(53, 63, 70, 0.08);
+  border-radius: 999px;
+  background: rgba(250, 250, 247, 0.8);
+  box-shadow: 0 10px 24px rgba(20, 25, 29, 0.04);
+}
+
+body[data-jp-theme-name="NBX"] .jp-nbx-preview-button {
+  background: linear-gradient(180deg, #4d717d, #355660);
+  color: #f7f9fa;
+  border-radius: 999px;
+  padding: 0 16px;
+  box-shadow: 0 8px 18px rgba(53, 86, 96, 0.2);
+}
+
+body[data-jp-theme-name="NBX"] .jp-nbx-preview-button .jp-ToolbarButtonComponent-label {
+  color: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Notebook {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: min(100%, 1600px);
+  margin: 0 auto;
+  padding: 0;
+  padding-bottom: 0 !important;
+  background: transparent;
+  overflow-y: auto;
+  overflow-x: visible;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Notebook-cell {
+  width: calc(100% - 64px);
+  margin: 0 auto 18px;
+  border: 1px solid transparent;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell {
+  width: min(100% - 64px, 780px);
+}
+
+body[data-jp-theme-name="NBX"] .jp-Cell.jp-CodeCell {
+  width: min(100% - 64px, 1280px);
+  background: rgba(251, 251, 248, 0.74);
+  border: 1px solid rgba(53, 63, 70, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 12px 24px rgba(20, 25, 29, 0.03);
+  overflow: hidden;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Cell.jp-CodeCell.jp-mod-active,
+body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell.jp-mod-active {
+  border-color: rgba(60, 98, 112, 0.28);
+  box-shadow: 0 0 0 1px rgba(60, 98, 112, 0.1), 0 18px 30px rgba(20, 25, 29, 0.04);
+}
+
+body[data-jp-theme-name="NBX"] .jp-InputArea-prompt,
+body[data-jp-theme-name="NBX"] .jp-OutputArea-prompt {
+  color: #7b868c;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body[data-jp-theme-name="NBX"] .jp-InputArea {
+  background: transparent;
+}
+
+body[data-jp-theme-name="NBX"] .jp-CodeMirrorEditor,
+body[data-jp-theme-name="NBX"] .cm-editor {
+  background: transparent;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Cell-inputWrapper {
+  padding: 8px 14px 6px 0;
+}
+
+body[data-jp-theme-name="NBX"] .jp-OutputArea-child {
+  margin: 8px 14px 14px 68px;
+  padding: 14px 16px;
+  border: 1px solid rgba(53, 63, 70, 0.08);
+  border-radius: 14px;
+  background: rgba(252, 252, 250, 0.8);
+  box-shadow: none;
+}
+
+body[data-jp-theme-name="NBX"] .jp-RenderedText pre,
+body[data-jp-theme-name="NBX"] .jp-OutputArea-output pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown {
+  padding: 8px 0;
+  color: #2e353a;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 1.14rem;
+  line-height: 1.88;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown h1,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown h2,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown h3 {
+  color: #1d2327;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown h1 {
+  font-size: clamp(2.6rem, 4vw, 4.4rem);
+  margin-bottom: 1.4rem;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown h2 {
+  font-size: 2rem;
+  margin-top: 2.8rem;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown p,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown ul,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown ol,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown blockquote {
+  max-width: 39rem;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown blockquote {
+  margin: 1.6rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(60, 98, 112, 0.2);
+  color: #667177;
+  font-style: italic;
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown table {
+  border-collapse: collapse;
+  background: rgba(252, 252, 250, 0.82);
+}
+
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown th,
+body[data-jp-theme-name="NBX"] .jp-MarkdownCell .jp-RenderedMarkdown td {
+  border-color: rgba(53, 63, 70, 0.08);
+  padding: 0.7rem 0.9rem;
+}
+
+body[data-jp-theme-name="NBX"] .MathJax_Display,
+body[data-jp-theme-name="NBX"] mjx-container[display="true"] {
+  margin: 1.8rem 0;
+  overflow-x: auto;
+}
+
+body[data-jp-theme-name="NBX"] .jp-RenderedImage img,
+body[data-jp-theme-name="NBX"] .jp-RenderedSVG img,
+body[data-jp-theme-name="NBX"] .jp-RenderedHTML img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+body[data-jp-theme-name="NBX"] .jp-Dialog-content,
+body[data-jp-theme-name="NBX"] .lm-CommandPalette {
+  border-radius: 22px;
+}
+
+body[data-jp-theme-name="NBX"] .lm-CommandPalette-search {
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+@media (max-width: 900px) {
+  body[data-jp-theme-name="NBX"] .jp-NotebookPanel-toolbar {
+    width: calc(100vw - 16px);
+    margin-top: 2px;
+  }
+
+  body[data-jp-theme-name="NBX"] .jp-Cell.jp-CodeCell,
+  body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell {
+    width: calc(100vw - 20px);
+  }
+
+  body[data-jp-theme-name="NBX"] .jp-OutputArea-child {
+    margin-left: 12px;
+  }
+}

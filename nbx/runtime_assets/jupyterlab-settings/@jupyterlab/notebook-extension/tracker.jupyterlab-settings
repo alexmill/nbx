@@ -1,0 +1,14 @@
+{
+    // Notebook
+    // @jupyterlab/notebook-extension:tracker
+    // Notebook settings.
+    // ******************
+
+    // Scroll Past End
+    // Whether to add extra blank space at the bottom of the notebook.
+    "scrollPastEnd": false,
+
+    // Windowing mode
+    // Whether to attach all cells to the DOM or virtualize them.
+    "windowingMode": "none"
+}

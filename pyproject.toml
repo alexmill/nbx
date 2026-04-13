@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nbx"
+version = "0.1.0"
+description = "A shareable notebook shell for Jupyter"
+requires-python = ">=3.13"
+dependencies = [
+  "ipython",
+  "scipy",
+  "matplotlib",
+  "pandas",
+  "numpy",
+  "scikit-learn",
+  "jupyter"
+]
+
+[project.scripts]
+nbx = "nbx.launcher:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.package-data]
+nbx = [
+  "templates/*.html",
+  "static/*",
+  "preview_templates/**/*.j2",
+  "preview_templates/**/*.json",
+  "preview_templates/**/*.css",
+  "runtime_assets/**/*.css",
+  "runtime_assets/**/*.jupyterlab-settings",
+  "runtime_assets/**/*.json",
+  "runtime_assets/**/*.template",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]

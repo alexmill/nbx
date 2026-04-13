@@ -1,0 +1,184 @@
+html {
+  background:
+    radial-gradient(circle at top, rgba(110, 128, 139, 0.08), transparent 34rem),
+    linear-gradient(180deg, #f5f4f1 0%, #efeeea 100%);
+}
+
+body.nbx-published {
+  margin: 0;
+  color: #252c30;
+  background: transparent;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+}
+
+.nbx-published-shell {
+  width: min(100vw - 48px, 1600px);
+  margin: 0 auto;
+  padding: 64px 0 120px;
+}
+
+.nbx-published-canvas {
+  width: 100%;
+}
+
+.nbx-published-header {
+  width: min(100%, 820px);
+  margin: 0 auto 36px;
+  padding: 32px 0 12px;
+  background:
+    radial-gradient(circle at top right, rgba(131, 149, 160, 0.08), transparent 18rem),
+    linear-gradient(180deg, rgba(247, 247, 244, 0.7), rgba(247, 247, 244, 0));
+  border-bottom: 1px solid rgba(54, 64, 70, 0.08);
+}
+
+.nbx-published-eyebrow {
+  margin: 0 0 14px;
+  color: #6f7b82;
+  font: 600 0.78rem/1.2 "Avenir Next", "Helvetica Neue", sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.nbx-published-title {
+  margin: 0;
+  max-width: 11ch;
+  color: #1d2428;
+  font-size: clamp(2.8rem, 5vw, 4.9rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.nbx-published-dek {
+  max-width: 42rem;
+  margin: 18px 0 0;
+  color: #5d676d;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.nbx-published-notebook {
+  padding: 12px 0 72px;
+}
+
+.nbx-published .jp-Notebook-cell {
+  width: calc(100% - 64px);
+  margin: 0 auto 20px;
+}
+
+.nbx-published .jp-Cell.jp-MarkdownCell {
+  width: min(100% - 64px, 780px);
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown {
+  font-size: 1.12rem;
+  line-height: 1.9;
+  color: #30373b;
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown h1,
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown h2,
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown h3 {
+  color: #1c2327;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown h1 {
+  font-size: 2.6rem;
+  margin: 0 0 1.2rem;
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown h2 {
+  font-size: 1.95rem;
+  margin: 2.8rem 0 1rem;
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown p,
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown ul,
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown ol,
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown blockquote {
+  max-width: 39rem;
+}
+
+.nbx-published .jp-MarkdownCell .jp-RenderedMarkdown blockquote {
+  margin: 1.8rem 0;
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 2px solid rgba(60, 98, 112, 0.22);
+  color: #69757a;
+  font-style: italic;
+}
+
+.nbx-published .jp-Cell.jp-CodeCell {
+  width: min(100% - 64px, 1280px);
+}
+
+.nbx-published .jp-Cell.jp-CodeCell,
+.nbx-published .jp-OutputArea-child {
+  border: 1px solid rgba(45, 53, 59, 0.08);
+  border-radius: 14px;
+  background: rgba(251, 251, 248, 0.74);
+  box-shadow: none;
+}
+
+.nbx-published .jp-Cell.jp-CodeCell {
+  overflow: hidden;
+}
+
+.nbx-published .jp-InputArea,
+.nbx-published .jp-OutputArea-child {
+  background: transparent;
+}
+
+.nbx-published .jp-InputArea-prompt,
+.nbx-published .jp-OutputArea-prompt {
+  color: #798287;
+  font: 600 0.8rem/1.3 "Avenir Next", "Helvetica Neue", sans-serif;
+}
+
+.nbx-published .jp-CodeMirrorEditor {
+  padding: 16px 18px 14px;
+}
+
+.nbx-published .jp-OutputArea-child {
+  margin-top: 8px;
+  padding: 14px 16px;
+}
+
+.nbx-published .jp-RenderedText pre,
+.nbx-published .jp-OutputArea-output pre {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #2e353a;
+  font-family: "Iosevka", "SFMono-Regular", "JetBrains Mono", monospace;
+}
+
+.nbx-published .jp-RenderedImage img,
+.nbx-published .jp-RenderedSVG img,
+.nbx-published .jp-RenderedHTML img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.nbx-published .MathJax_Display,
+.nbx-published mjx-container[display="true"] {
+  margin: 1.8rem 0;
+  overflow-x: auto;
+}
+
+@media (max-width: 900px) {
+  .nbx-published-shell {
+    width: min(100vw - 20px, 1600px);
+    padding: 24px 0 64px;
+  }
+
+  .nbx-published-header {
+    width: calc(100% - 8px);
+    padding: 20px 0 8px;
+  }
+
+  .nbx-published .jp-Notebook-cell,
+  .nbx-published .jp-Cell.jp-CodeCell {
+    width: calc(100% - 12px);
+  }
+}

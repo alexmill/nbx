@@ -1,0 +1,25 @@
+{%- extends 'lab/index.html.j2' -%}
+
+{% block extra_css %}
+{{ super() }}
+{{ resources.include_css("static/preview.css") }}
+{% endblock extra_css %}
+
+{%- block body_header -%}
+<body class="jp-Notebook nbx-published" data-jp-theme-light="true" data-jp-theme-name="NBX Preview">
+<main class="nbx-published-shell">
+  <section class="nbx-published-canvas">
+    <header class="nbx-published-header">
+      <p class="nbx-published-eyebrow">Saved Notebook Preview</p>
+      <h1 class="nbx-published-title">{{ nb.metadata.get('title', resources['metadata']['name']) | escape_html_keep_quotes }}</h1>
+      <p class="nbx-published-dek">Rendered from the notebook’s saved prose, LaTeX, code, and outputs.</p>
+    </header>
+    <section class="nbx-published-notebook">
+{%- endblock body_header -%}
+
+{% block body_footer %}
+    </section>
+  </section>
+</main>
+</body>
+{% endblock body_footer %}

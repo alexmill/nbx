@@ -1,0 +1,183 @@
+from __future__ import annotations
+
+import tempfile
+import tomllib
+import unittest
+from pathlib import Path
+
+import nbformat
+
+from nbx.launcher import (
+    build_command,
+    build_environment,
+    ensure_runtime_directories,
+    parse_args,
+    project_paths,
+)
+from nbx.preview import render_notebook_preview, resolve_notebook_path
+
+
+PACKAGE_DIR = Path(__file__).resolve().parents[1] / "nbx"
+PYPROJECT_PATH = Path(__file__).resolve().parents[1] / "pyproject.toml"
+
+
+def make_notebook(title: str = "Example Notebook") -> nbformat.NotebookNode:
+    notebook = nbformat.v4.new_notebook()
+    notebook.metadata["title"] = title
+    notebook.cells = [
+        nbformat.v4.new_markdown_cell("# Example Notebook\n\nA short equation: $x^2$."),
+        nbformat.v4.new_code_cell("print('hello')"),
+    ]
+    return notebook
+
+
+class LauncherTests(unittest.TestCase):
+    def test_parse_args_accepts_project_root_notebook_and_passthrough_jupyter_args(self) -> None:
+        parsed = parse_args(
+            [
+                "--project-root",
+                "/tmp/story",
+                "drafts/post.ipynb",
+                "--no-browser",
+                "--ServerApp.port=9999",
+            ]
+        )
+
+        self.assertEqual(parsed.project_root, Path("/tmp/story"))
+        self.assertEqual(parsed.notebook_path, Path("drafts/post.ipynb"))
+        self.assertEqual(
+            parsed.jupyter_args,
+            ["--no-browser", "--ServerApp.port=9999"],
+        )
+
+    def test_build_environment_uses_project_local_nbx_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = project_paths(
+                project_root=Path(temp_dir),
+                package_dir=PACKAGE_DIR,
+            )
+
+            env = build_environment({"PATH": "/usr/bin"}, paths)
+
+        self.assertEqual(env["JUPYTER_CONFIG_DIR"], str(paths.config_dir))
+        self.assertEqual(env["JUPYTER_DATA_DIR"], str(paths.data_dir))
+        self.assertEqual(env["JUPYTERLAB_SETTINGS_DIR"], str(paths.lab_settings_dir))
+        self.assertEqual(env["JUPYTERLAB_WORKSPACES_DIR"], str(paths.workspaces_dir))
+        self.assertEqual(env["NBX_PROJECT_ROOT"], str(paths.project_root))
+        self.assertEqual(env["NBX_PACKAGE_DIR"], str(paths.package_dir))
+        self.assertEqual(env["PATH"], "/usr/bin")
+
+    def test_build_command_launches_tree_when_no_notebook_target_is_given(self) -> None:
+        command = build_command()
+
+        self.assertEqual(command, ["jupyter", "notebook"])
+
+    def test_build_command_opens_requested_notebook_relative_to_project_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = project_paths(
+                project_root=Path(temp_dir),
+                package_dir=PACKAGE_DIR,
+            )
+
+            command = build_command(
+                notebook_path=Path("drafts/post.ipynb"),
+                extra_args=["--no-browser"],
+                paths=paths,
+            )
+
+        self.assertEqual(
+            command,
+            ["jupyter", "notebook", "--no-browser", "drafts/post.ipynb"],
+        )
+
+    def test_ensure_runtime_directories_materializes_nbx_runtime_assets(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = project_paths(
+                project_root=Path(temp_dir),
+                package_dir=PACKAGE_DIR,
+            )
+
+            ensure_runtime_directories(paths)
+
+            server_config = (paths.config_dir / "jupyter_server_config.py").read_text(
+                encoding="utf-8"
+            )
+            notebook_config = (
+                paths.config_dir / "jupyter_notebook_config.py"
+            ).read_text(encoding="utf-8")
+            css = (paths.config_dir / "custom" / "custom.css").read_text(
+                encoding="utf-8"
+            )
+            theme_settings = (
+                paths.lab_settings_dir
+                / "@jupyterlab/apputils-extension/themes.jupyterlab-settings"
+            ).read_text(encoding="utf-8")
+            tracker_settings = (
+                paths.lab_settings_dir
+                / "@jupyterlab/notebook-extension/tracker.jupyterlab-settings"
+            ).read_text(encoding="utf-8")
+
+        self.assertIn('c.ServerApp.jpserver_extensions = {"nbx": True}', server_config)
+        self.assertIn(str(paths.project_root), server_config)
+        self.assertIn(str(paths.package_dir / "templates"), notebook_config)
+        self.assertIn('body[data-jp-theme-name="NBX"]', css)
+        self.assertIn(".jp-nbx-toolbar-shell", css)
+        self.assertIn('"theme": "NBX"', theme_settings)
+        self.assertIn('"windowingMode": "none"', tracker_settings)
+
+
+class PreviewTests(unittest.TestCase):
+    def test_render_preview_contains_nbx_shell_and_notebook_content(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_root = Path(temp_dir)
+            notebook_path = project_root / "post.ipynb"
+            nbformat.write(make_notebook(), notebook_path)
+            paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+            html = render_notebook_preview(notebook_path.name, paths=paths)
+
+        self.assertIn("nbx-published-shell", html)
+        self.assertIn("nbx-published-canvas", html)
+        self.assertIn("Example Notebook", html)
+        self.assertIn("jp-MarkdownCell", html)
+        self.assertIn("jp-CodeCell", html)
+        self.assertIn("MathJax", html)
+        self.assertNotIn("editorial-published", html)
+
+    def test_resolve_notebook_path_rejects_paths_outside_project_root(self) -> None:
+        with tempfile.TemporaryDirectory() as project_dir, tempfile.TemporaryDirectory() as other_dir:
+            project_root = Path(project_dir)
+            outside_path = Path(other_dir) / "outside.ipynb"
+            outside_path.write_text("{}", encoding="utf-8")
+            paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+            with self.assertRaises(ValueError):
+                resolve_notebook_path(str(outside_path), paths=paths)
+
+    def test_resolve_notebook_path_rejects_missing_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            paths = project_paths(project_root=Path(temp_dir), package_dir=PACKAGE_DIR)
+
+            with self.assertRaises(FileNotFoundError):
+                resolve_notebook_path("missing.ipynb", paths=paths)
+
+
+class PackagingTests(unittest.TestCase):
+    def test_pyproject_exposes_nbx_as_the_shareable_command(self) -> None:
+        with PYPROJECT_PATH.open("rb") as handle:
+            config = tomllib.load(handle)
+
+        self.assertEqual(config["project"]["name"], "nbx")
+        self.assertEqual(
+            config["project"]["scripts"]["nbx"],
+            "nbx.launcher:main",
+        )
+        self.assertNotIn("editorial-notebook", config["project"]["scripts"])
+        self.assertIn(
+            "runtime_assets/**/*.template",
+            config["tool"]["setuptools"]["package-data"]["nbx"],
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
