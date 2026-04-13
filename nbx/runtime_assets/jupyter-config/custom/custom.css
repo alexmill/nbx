@@ -183,7 +183,8 @@ body[data-jp-theme-name="NBX"] .jp-Notebook-cell {
   border: 1px solid transparent;
 }
 
-body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell {
+body[data-jp-theme-name="NBX"] .jp-Cell.jp-MarkdownCell,
+body[data-jp-theme-name="NBX"] .jp-Notebook .jp-Cell.jp-MarkdownCell {
   width: min(100% - 64px, 1280px);
 }
 
@@ -218,6 +219,15 @@ body[data-jp-theme-name="NBX"] .jp-InputArea {
 body[data-jp-theme-name="NBX"] .jp-CodeMirrorEditor,
 body[data-jp-theme-name="NBX"] .cm-editor {
   background: transparent;
+}
+
+body[data-jp-theme-name="NBX"] .cm-editor .cm-cursor,
+body[data-jp-theme-name="NBX"] .cm-editor .cm-dropCursor {
+  border-left-color: #1d2428;
+}
+
+body[data-jp-theme-name="NBX"] .cm-content {
+  caret-color: #1d2428;
 }
 
 body[data-jp-theme-name="NBX"] .jp-Cell-inputWrapper {
