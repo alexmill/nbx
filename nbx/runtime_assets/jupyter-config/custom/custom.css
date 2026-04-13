@@ -319,8 +319,8 @@ body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
   flex-wrap: wrap;
   gap: 5px;
   position: absolute;
-  top: -13px;
-  right: 12px;
+  top: 6px;
+  right: 8px;
   z-index: 10;
 }
 
@@ -385,9 +385,6 @@ body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
 }
 
 .nbx-tag-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
   min-width: 140px;
   padding: 4px;
   border-radius: 10px;
