@@ -3,6 +3,37 @@
 {% block extra_css %}
 {{ super() }}
 {{ resources.include_css("static/preview.css") }}
+{% if resources.get('nbx_fonts') %}
+  {%- set fonts = resources.nbx_fonts -%}
+  {%- set gf_families = [] -%}
+  {%- for key in ('serif', 'sans', 'mono') -%}
+    {%- if fonts.get(key) -%}
+      {%- set _ = gf_families.append('family=' + fonts[key] | replace(' ', '+')) -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if gf_families %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?{{ gf_families | join('&') }}&display=swap" rel="stylesheet">
+  {%- endif %}
+  <style>
+    {%- if fonts.get('serif') %}
+    .nbx-published { font-family: "{{ fonts.serif }}", Georgia, serif; }
+    .nbx-figcaption { font-family: "{{ fonts.serif }}", Georgia, serif; }
+    .nbx-published-title { font-family: "{{ fonts.serif }}", Georgia, serif; }
+    {%- endif %}
+    {%- if fonts.get('sans') %}
+    .nbx-published-eyebrow,
+    .nbx-collapse-toggle,
+    .nbx-published .jp-InputArea-prompt,
+    .nbx-published .jp-OutputArea-prompt { font-family: "{{ fonts.sans }}", sans-serif; }
+    {%- endif %}
+    {%- if fonts.get('mono') %}
+    .nbx-published .jp-RenderedText pre,
+    .nbx-published .jp-OutputArea-output pre { font-family: "{{ fonts.mono }}", monospace; }
+    {%- endif %}
+  </style>
+{% endif %}
 {% endblock extra_css %}
 
 {%- block any_cell scoped -%}

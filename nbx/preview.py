@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -77,11 +78,15 @@ def render_notebook_preview(
     exporter.exclude_output_prompt = True
     exporter.exclude_anchor_links = True
 
+    config_path = resolved_paths.project_root / "nbx.json"
+    nbx_config = json.loads(config_path.read_text(encoding="utf-8")) if config_path.exists() else {}
+
     html, _ = exporter.from_notebook_node(
         notebook,
         resources={
             "metadata": {"name": notebook_path.stem},
             "theme": "light",
+            "nbx_fonts": nbx_config.get("fonts", {}),
         },
     )
     return html
