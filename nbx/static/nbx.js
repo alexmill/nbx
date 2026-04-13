@@ -142,6 +142,109 @@
     toolbarNode.appendChild(buildToolbarButton(app));
   }
 
+  /* ---- Tag badges ---- */
+
+  const NBX_TAG_PREFIX = "celltag_nbx-";
+  const BADGE_CONTAINER_CLASS = "nbx-tag-badges";
+
+  function extractNbxTags(cellNode) {
+    const tags = [];
+    for (const cls of cellNode.classList) {
+      if (cls.startsWith(NBX_TAG_PREFIX)) {
+        tags.push(cls.slice(NBX_TAG_PREFIX.length));
+      }
+    }
+    return tags;
+  }
+
+  function syncBadges(cellNode) {
+    const tags = extractNbxTags(cellNode);
+    let container = cellNode.querySelector("." + BADGE_CONTAINER_CLASS);
+
+    if (tags.length === 0) {
+      if (container) {
+        container.remove();
+      }
+      return;
+    }
+
+    if (!container) {
+      container = document.createElement("div");
+      container.className = BADGE_CONTAINER_CLASS;
+      cellNode.appendChild(container);
+    }
+
+    const current = Array.from(container.children).map((el) => el.textContent);
+    if (current.length === tags.length && current.every((t, i) => t === tags[i])) {
+      return;
+    }
+
+    container.innerHTML = "";
+    for (const tag of tags) {
+      const badge = document.createElement("span");
+      badge.className = "nbx-tag-badge";
+      badge.textContent = tag;
+      container.appendChild(badge);
+    }
+  }
+
+  function installTagBadges(panel) {
+    const notebookNode = panel.content.node;
+    if (notebookNode.__nbxBadgeObserver) {
+      return;
+    }
+
+    function scanAll() {
+      notebookNode.querySelectorAll(".jp-Notebook-cell").forEach(syncBadges);
+    }
+
+    scanAll();
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === "attributes" && mutation.attributeName === "class") {
+          const node = mutation.target;
+          if (node.classList && node.classList.contains("jp-Notebook-cell")) {
+            syncBadges(node);
+          }
+        }
+        if (mutation.type === "childList") {
+          for (const added of mutation.addedNodes) {
+            if (added.nodeType === 1 && added.classList && added.classList.contains("jp-Notebook-cell")) {
+              syncBadges(added);
+            }
+          }
+        }
+      }
+    });
+
+    observer.observe(notebookNode, {
+      attributes: true,
+      attributeFilter: ["class"],
+      childList: true,
+      subtree: true,
+    });
+
+    notebookNode.__nbxBadgeObserver = observer;
+  }
+
+  function installTagBadgesAll(tracker) {
+    if (!tracker) {
+      return;
+    }
+
+    if (typeof tracker.forEach === "function") {
+      tracker.forEach((panel) => installTagBadges(panel));
+    }
+
+    if (!tracker.__nbxBadgesConnected) {
+      tracker.__nbxBadgesConnected = true;
+      tracker.widgetAdded.connect((_, panel) => installTagBadges(panel));
+    }
+  }
+
+  /* ---- Toolbar buttons ---- */
+
   function installToolbarButtons(tracker, app) {
     if (!tracker) {
       return;
@@ -187,6 +290,7 @@
     registerPreviewCommand(app, tracker);
     addPaletteItem(app);
     installToolbarButtons(tracker, app);
+    installTagBadgesAll(tracker);
   }
 
   if (document.readyState === "loading") {

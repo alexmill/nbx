@@ -226,6 +226,18 @@ body.nbx-published {
   display: none;
 }
 
+/* --- Wide/breakout cells (nbx-wide tag) --- */
+
+.nbx-published .celltag_nbx-wide {
+  width: min(100% - 64px, 1400px);
+}
+
+.nbx-published .celltag_nbx-wide .jp-RenderedImage img,
+.nbx-published .celltag_nbx-wide .jp-RenderedSVG img,
+.nbx-published .celltag_nbx-wide .jp-RenderedHTML img {
+  max-width: 100%;
+}
+
 @media (max-width: 900px) {
   .nbx-published-shell {
     width: min(100vw - 20px, 1600px);
