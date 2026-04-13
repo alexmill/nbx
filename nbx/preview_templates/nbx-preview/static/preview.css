@@ -240,7 +240,6 @@ body.nbx-published {
 /* --- Wide/breakout cells (nbx-wide tag) --- */
 
 .nbx-published .celltag_nbx-wide {
-  width: 96vw;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -250,7 +249,9 @@ body.nbx-published {
   box-shadow: none;
 }
 
-.nbx-published .celltag_nbx-wide > .jp-Cell-outputWrapper {
+.nbx-published .celltag_nbx-wide > .jp-Cell-outputWrapper,
+.nbx-published .celltag_nbx-wide .jp-OutputArea,
+.nbx-published .celltag_nbx-wide .jp-OutputArea-output {
   overflow: visible;
 }
 
@@ -268,10 +269,6 @@ body.nbx-published {
   width: 100%;
   max-width: 100%;
   border-radius: 14px;
-}
-
-.nbx-published .celltag_nbx-wide .jp-OutputArea-output {
-  overflow: visible;
 }
 
 @media (max-width: 900px) {
