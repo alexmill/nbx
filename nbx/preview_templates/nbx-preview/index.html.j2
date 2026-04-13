@@ -5,6 +5,21 @@
 {{ resources.include_css("static/preview.css") }}
 {% endblock extra_css %}
 
+{%- block any_cell scoped -%}
+  {%- set tags = cell.metadata.get('tags', []) -%}
+  {%- if 'nbx-hide' in tags -%}
+  {%- elif 'nbx-collapse' in tags -%}
+    <details class="nbx-collapsed-cell">
+      <summary class="nbx-collapse-toggle">
+        {%- if cell.cell_type == 'code' -%}Show code{%- else -%}Show content{%- endif -%}
+      </summary>
+      {{ super() }}
+    </details>
+  {%- else -%}
+    {{ super() }}
+  {%- endif -%}
+{%- endblock any_cell -%}
+
 {%- block body_header -%}
 <body class="jp-Notebook nbx-published" data-jp-theme-light="true" data-jp-theme-name="NBX Preview">
 <main class="nbx-published-shell">

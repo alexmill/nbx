@@ -144,6 +144,50 @@ class PreviewTests(unittest.TestCase):
         self.assertIn("MathJax", html)
         self.assertNotIn("editorial-published", html)
 
+    def test_nbx_hide_tag_removes_cell_from_preview(self) -> None:
+        notebook = nbformat.v4.new_notebook()
+        notebook.metadata["title"] = "Hide Test"
+        notebook.cells = [
+            nbformat.v4.new_markdown_cell("# Visible heading"),
+            nbformat.v4.new_code_cell("secret_setup_code()"),
+            nbformat.v4.new_markdown_cell("Visible paragraph"),
+        ]
+        notebook.cells[1].metadata["tags"] = ["nbx-hide"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_root = Path(temp_dir)
+            notebook_path = project_root / "post.ipynb"
+            nbformat.write(notebook, notebook_path)
+            paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+            html = render_notebook_preview(notebook_path.name, paths=paths)
+
+        self.assertIn("Visible heading", html)
+        self.assertIn("Visible paragraph", html)
+        self.assertNotIn("secret_setup_code", html)
+
+    def test_nbx_collapse_tag_wraps_cell_in_details_element(self) -> None:
+        notebook = nbformat.v4.new_notebook()
+        notebook.metadata["title"] = "Collapse Test"
+        notebook.cells = [
+            nbformat.v4.new_markdown_cell("# Intro"),
+            nbformat.v4.new_code_cell("collapsed_code()"),
+        ]
+        notebook.cells[1].metadata["tags"] = ["nbx-collapse"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project_root = Path(temp_dir)
+            notebook_path = project_root / "post.ipynb"
+            nbformat.write(notebook, notebook_path)
+            paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+            html = render_notebook_preview(notebook_path.name, paths=paths)
+
+        self.assertIn("<details", html)
+        self.assertIn("nbx-collapsed-cell", html)
+        self.assertIn("Show code", html)
+        self.assertIn("collapsed_code", html)
+
     def test_resolve_notebook_path_rejects_paths_outside_project_root(self) -> None:
         with tempfile.TemporaryDirectory() as project_dir, tempfile.TemporaryDirectory() as other_dir:
             project_root = Path(project_dir)

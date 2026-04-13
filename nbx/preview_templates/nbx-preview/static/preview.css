@@ -66,7 +66,7 @@ body.nbx-published {
 }
 
 .nbx-published .jp-Cell.jp-MarkdownCell {
-  width: min(100% - 64px, 780px);
+  width: min(100% - 64px, 860px);
 }
 
 .nbx-published .jp-MarkdownCell .jp-RenderedMarkdown {
@@ -110,7 +110,7 @@ body.nbx-published {
 }
 
 .nbx-published .jp-Cell.jp-CodeCell {
-  width: min(100% - 64px, 1280px);
+  width: min(100% - 64px, 940px);
 }
 
 .nbx-published .jp-Cell.jp-CodeCell,
@@ -164,6 +164,56 @@ body.nbx-published {
 .nbx-published mjx-container[display="true"] {
   margin: 1.8rem 0;
   overflow-x: auto;
+}
+
+/* --- Collapsible cells (nbx-collapse tag) --- */
+
+.nbx-collapsed-cell {
+  width: min(100% - 64px, 1280px);
+  margin: 0 auto 20px;
+}
+
+.nbx-collapse-toggle {
+  display: block;
+  padding: 8px 14px;
+  border: 1px solid rgba(45, 53, 59, 0.08);
+  border-radius: 10px;
+  background: rgba(251, 251, 248, 0.74);
+  color: #798287;
+  font: 600 0.82rem/1.4 "Avenir Next", "Helvetica Neue", sans-serif;
+  cursor: pointer;
+  list-style: none;
+}
+
+.nbx-collapse-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.nbx-collapse-toggle::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 8px;
+  border-style: solid;
+  border-width: 5px 0 5px 7px;
+  border-color: transparent transparent transparent #99a3a9;
+  transition: transform 0.15s ease;
+  vertical-align: 1px;
+}
+
+.nbx-collapsed-cell[open] > .nbx-collapse-toggle::before {
+  transform: rotate(90deg);
+}
+
+.nbx-collapsed-cell[open] > .nbx-collapse-toggle {
+  border-radius: 10px 10px 0 0;
+  border-bottom-color: transparent;
+}
+
+.nbx-collapsed-cell .jp-Notebook-cell {
+  width: 100%;
+  margin: 0;
 }
 
 @media (max-width: 900px) {
