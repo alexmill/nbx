@@ -142,9 +142,17 @@
     toolbarNode.appendChild(buildToolbarButton(app));
   }
 
-  /* ---- Tag badges ---- */
+  /* ---- Cell tag bar ---- */
 
-  const BADGE_CONTAINER_CLASS = "nbx-tag-badges";
+  const NBX_TAGS = [
+    { id: "nbx-hide", label: "Hide cell" },
+    { id: "nbx-collapse", label: "Collapse" },
+    { id: "nbx-hide-input", label: "Hide input" },
+    { id: "nbx-hide-output", label: "Hide output" },
+    { id: "nbx-wide", label: "Wide" },
+  ];
+
+  const TAG_BAR_CLASS = "nbx-tag-bar";
 
   function getCellTags(cellWidget) {
     try {
@@ -162,65 +170,201 @@
     }
   }
 
-  function syncBadges(cellWidget) {
+  function getAllCellTags(cellWidget) {
+    try {
+      const model = cellWidget.model;
+      if (!model) {
+        return [];
+      }
+      const tags =
+        (typeof model.getMetadata === "function" && model.getMetadata("tags")) ||
+        model.metadata?.tags ||
+        [];
+      return Array.isArray(tags) ? [...tags] : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function setCellTags(cellWidget, tags) {
+    const model = cellWidget.model;
+    if (!model) {
+      return;
+    }
+    if (typeof model.setMetadata === "function") {
+      model.setMetadata("tags", tags);
+    } else if (model.sharedModel && typeof model.sharedModel.setMetadata === "function") {
+      model.sharedModel.setMetadata("tags", tags);
+    }
+  }
+
+  function addCellTag(cellWidget, tagId) {
+    const all = getAllCellTags(cellWidget);
+    if (!all.includes(tagId)) {
+      all.push(tagId);
+      setCellTags(cellWidget, all);
+    }
+  }
+
+  function removeCellTag(cellWidget, tagId) {
+    const all = getAllCellTags(cellWidget);
+    const filtered = all.filter((t) => t !== tagId);
+    setCellTags(cellWidget, filtered);
+  }
+
+  function labelForTag(tagId) {
+    const entry = NBX_TAGS.find((t) => t.id === tagId);
+    return entry ? entry.label : tagId.replace("nbx-", "");
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll(".nbx-tag-dropdown").forEach((el) => el.remove());
+  }
+
+  function buildTagPill(cellWidget, tagId) {
+    const pill = document.createElement("span");
+    pill.className = "nbx-tag-pill";
+    pill.dataset.tagId = tagId;
+
+    const label = document.createElement("span");
+    label.className = "nbx-tag-pill-label";
+    label.textContent = labelForTag(tagId);
+    pill.appendChild(label);
+
+    const remove = document.createElement("button");
+    remove.className = "nbx-tag-pill-remove";
+    remove.type = "button";
+    remove.textContent = "\u00d7";
+    remove.title = "Remove " + tagId;
+    remove.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeCellTag(cellWidget, tagId);
+      syncTagBar(cellWidget);
+    });
+    pill.appendChild(remove);
+
+    return pill;
+  }
+
+  function buildAddButton(cellWidget) {
+    const btn = document.createElement("button");
+    btn.className = "nbx-tag-add-btn";
+    btn.type = "button";
+    btn.textContent = "+";
+    btn.title = "Add tag";
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const existing = document.querySelector(".nbx-tag-dropdown");
+      if (existing && existing.parentNode === btn.parentNode) {
+        existing.remove();
+        return;
+      }
+      closeAllDropdowns();
+      showDropdown(cellWidget, btn);
+    });
+
+    return btn;
+  }
+
+  function showDropdown(cellWidget, anchorBtn) {
+    const currentTags = getCellTags(cellWidget);
+    const available = NBX_TAGS.filter((t) => !currentTags.includes(t.id));
+
+    if (available.length === 0) {
+      return;
+    }
+
+    const dropdown = document.createElement("div");
+    dropdown.className = "nbx-tag-dropdown";
+
+    for (const tag of available) {
+      const item = document.createElement("button");
+      item.className = "nbx-tag-dropdown-item";
+      item.type = "button";
+      item.textContent = tag.label;
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        addCellTag(cellWidget, tag.id);
+        dropdown.remove();
+        syncTagBar(cellWidget);
+      });
+      dropdown.appendChild(item);
+    }
+
+    anchorBtn.parentNode.appendChild(dropdown);
+
+    const dismiss = (e) => {
+      if (!dropdown.contains(e.target) && e.target !== anchorBtn) {
+        dropdown.remove();
+        document.removeEventListener("pointerdown", dismiss, true);
+      }
+    };
+    window.setTimeout(() => {
+      document.addEventListener("pointerdown", dismiss, true);
+    }, 0);
+  }
+
+  function syncTagBar(cellWidget) {
     const node = cellWidget.node;
     const tags = getCellTags(cellWidget);
-    let container = node.querySelector("." + BADGE_CONTAINER_CLASS);
+    const isActive = node.classList.contains("jp-mod-active");
+    let bar = node.querySelector("." + TAG_BAR_CLASS);
 
-    if (tags.length === 0) {
-      if (container) {
-        container.remove();
+    if (tags.length === 0 && !isActive) {
+      if (bar) {
+        bar.remove();
       }
       return;
     }
 
-    if (!container) {
-      container = document.createElement("div");
-      container.className = BADGE_CONTAINER_CLASS;
-      node.appendChild(container);
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.className = TAG_BAR_CLASS;
+      node.appendChild(bar);
     }
 
-    const labels = tags.map((t) => t.slice(4));
-    const current = Array.from(container.children).map((el) => el.textContent);
-    if (current.length === labels.length && current.every((t, i) => t === labels[i])) {
-      return;
+    bar.innerHTML = "";
+
+    for (const tagId of tags) {
+      const pill = buildTagPill(cellWidget, tagId);
+      if (!isActive) {
+        pill.classList.add("nbx-tag-pill--readonly");
+      }
+      bar.appendChild(pill);
     }
 
-    container.innerHTML = "";
-    for (const label of labels) {
-      const badge = document.createElement("span");
-      badge.className = "nbx-tag-badge";
-      badge.textContent = label;
-      container.appendChild(badge);
+    if (isActive) {
+      bar.appendChild(buildAddButton(cellWidget));
     }
   }
 
   function watchCellMetadata(cellWidget) {
     const model = cellWidget.model;
-    if (!model || model.__nbxBadgeWatch) {
+    if (!model || model.__nbxTagWatch) {
       return;
     }
-    model.__nbxBadgeWatch = true;
+    model.__nbxTagWatch = true;
 
     if (model.metadataChanged) {
-      model.metadataChanged.connect(() => syncBadges(cellWidget));
+      model.metadataChanged.connect(() => syncTagBar(cellWidget));
     }
     if (model.sharedModel?.changed) {
-      model.sharedModel.changed.connect(() => syncBadges(cellWidget));
+      model.sharedModel.changed.connect(() => syncTagBar(cellWidget));
     }
   }
 
-  function installTagBadges(panel) {
+  function installTagBars(panel) {
     const notebook = panel.content;
-    if (notebook.__nbxBadgesInstalled) {
+    if (notebook.__nbxTagBarsInstalled) {
       return;
     }
-    notebook.__nbxBadgesInstalled = true;
+    notebook.__nbxTagBarsInstalled = true;
 
     function scanAll() {
       for (const widget of notebook.widgets) {
         if (widget && widget.node) {
-          syncBadges(widget);
+          syncTagBar(widget);
           watchCellMetadata(widget);
         }
       }
@@ -239,20 +383,26 @@
         window.setTimeout(scanAll, 100);
       });
     }
+
+    if (notebook.activeCellChanged) {
+      notebook.activeCellChanged.connect(() => {
+        window.setTimeout(scanAll, 0);
+      });
+    }
   }
 
-  function installTagBadgesAll(tracker) {
+  function installTagBarsAll(tracker) {
     if (!tracker) {
       return;
     }
 
     if (typeof tracker.forEach === "function") {
-      tracker.forEach((panel) => installTagBadges(panel));
+      tracker.forEach((panel) => installTagBars(panel));
     }
 
-    if (!tracker.__nbxBadgesConnected) {
-      tracker.__nbxBadgesConnected = true;
-      tracker.widgetAdded.connect((_, panel) => installTagBadges(panel));
+    if (!tracker.__nbxTagBarsConnected) {
+      tracker.__nbxTagBarsConnected = true;
+      tracker.widgetAdded.connect((_, panel) => installTagBars(panel));
     }
   }
 
@@ -303,7 +453,7 @@
     registerPreviewCommand(app, tracker);
     addPaletteItem(app);
     installToolbarButtons(tracker, app);
-    installTagBadgesAll(tracker);
+    installTagBarsAll(tracker);
   }
 
   if (document.readyState === "loading") {

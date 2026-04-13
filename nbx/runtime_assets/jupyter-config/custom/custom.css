@@ -311,28 +311,108 @@ body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
   width: min(100% - 64px, 1400px);
 }
 
-/* --- Tag badges --- */
+/* --- Cell tag bar --- */
 
-.nbx-tag-badges {
+.nbx-tag-bar {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 5px;
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: -13px;
+  right: 12px;
   z-index: 10;
+}
+
+.nbx-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(60, 98, 112, 0.09);
+  font: 600 0.62rem/1 "Avenir Next", "Helvetica Neue", sans-serif;
+  letter-spacing: 0.03em;
+  color: #4a7080;
+}
+
+.nbx-tag-pill--readonly .nbx-tag-pill-remove {
+  display: none;
+}
+
+.nbx-tag-pill-label {
   pointer-events: none;
 }
 
-.nbx-tag-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 999px;
+.nbx-tag-pill-remove {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 1;
+  color: #6a8a96;
+  transition: background 0.1s, color 0.1s;
+}
+
+.nbx-tag-pill-remove:hover {
+  background: rgba(60, 98, 112, 0.15);
+  color: #2c4e5a;
+}
+
+.nbx-tag-add-btn {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(60, 98, 112, 0.08);
+  color: #5a8290;
+  font: 600 14px/1 "Avenir Next", "Helvetica Neue", sans-serif;
+  transition: background 0.1s, color 0.1s;
+}
+
+.nbx-tag-add-btn:hover {
+  background: rgba(60, 98, 112, 0.18);
+  color: #2c4e5a;
+}
+
+.nbx-tag-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 140px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgba(252, 252, 250, 0.96);
+  border: 1px solid rgba(45, 53, 59, 0.10);
+  box-shadow: 0 8px 24px rgba(20, 25, 29, 0.10);
+  backdrop-filter: blur(16px);
+  z-index: 100;
+}
+
+.nbx-tag-dropdown-item {
+  all: unset;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font: 500 0.75rem/1.4 "Avenir Next", "Helvetica Neue", sans-serif;
+  color: #2e3a40;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.nbx-tag-dropdown-item:hover {
   background: rgba(60, 98, 112, 0.10);
-  color: #4a7080;
-  font: 600 0.65rem/1.4 "Avenir Next", "Helvetica Neue", sans-serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  pointer-events: auto;
 }
 
 body[data-jp-theme-name="NBX"] .jp-Dialog-content,
