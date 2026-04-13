@@ -144,22 +144,28 @@
 
   /* ---- Tag badges ---- */
 
-  const NBX_TAG_PREFIX = "celltag_nbx-";
   const BADGE_CONTAINER_CLASS = "nbx-tag-badges";
 
-  function extractNbxTags(cellNode) {
-    const tags = [];
-    for (const cls of cellNode.classList) {
-      if (cls.startsWith(NBX_TAG_PREFIX)) {
-        tags.push(cls.slice(NBX_TAG_PREFIX.length));
+  function getCellTags(cellWidget) {
+    try {
+      const model = cellWidget.model;
+      if (!model) {
+        return [];
       }
+      const tags =
+        (typeof model.getMetadata === "function" && model.getMetadata("tags")) ||
+        model.metadata?.tags ||
+        [];
+      return Array.isArray(tags) ? tags.filter((t) => t.startsWith("nbx-")) : [];
+    } catch {
+      return [];
     }
-    return tags;
   }
 
-  function syncBadges(cellNode) {
-    const tags = extractNbxTags(cellNode);
-    let container = cellNode.querySelector("." + BADGE_CONTAINER_CLASS);
+  function syncBadges(cellWidget) {
+    const node = cellWidget.node;
+    const tags = getCellTags(cellWidget);
+    let container = node.querySelector("." + BADGE_CONTAINER_CLASS);
 
     if (tags.length === 0) {
       if (container) {
@@ -171,61 +177,68 @@
     if (!container) {
       container = document.createElement("div");
       container.className = BADGE_CONTAINER_CLASS;
-      cellNode.appendChild(container);
+      node.appendChild(container);
     }
 
+    const labels = tags.map((t) => t.slice(4));
     const current = Array.from(container.children).map((el) => el.textContent);
-    if (current.length === tags.length && current.every((t, i) => t === tags[i])) {
+    if (current.length === labels.length && current.every((t, i) => t === labels[i])) {
       return;
     }
 
     container.innerHTML = "";
-    for (const tag of tags) {
+    for (const label of labels) {
       const badge = document.createElement("span");
       badge.className = "nbx-tag-badge";
-      badge.textContent = tag;
+      badge.textContent = label;
       container.appendChild(badge);
     }
   }
 
-  function installTagBadges(panel) {
-    const notebookNode = panel.content.node;
-    if (notebookNode.__nbxBadgeObserver) {
+  function watchCellMetadata(cellWidget) {
+    const model = cellWidget.model;
+    if (!model || model.__nbxBadgeWatch) {
       return;
     }
+    model.__nbxBadgeWatch = true;
+
+    if (model.metadataChanged) {
+      model.metadataChanged.connect(() => syncBadges(cellWidget));
+    }
+    if (model.sharedModel?.changed) {
+      model.sharedModel.changed.connect(() => syncBadges(cellWidget));
+    }
+  }
+
+  function installTagBadges(panel) {
+    const notebook = panel.content;
+    if (notebook.__nbxBadgesInstalled) {
+      return;
+    }
+    notebook.__nbxBadgesInstalled = true;
 
     function scanAll() {
-      notebookNode.querySelectorAll(".jp-Notebook-cell").forEach(syncBadges);
+      for (const widget of notebook.widgets) {
+        if (widget && widget.node) {
+          syncBadges(widget);
+          watchCellMetadata(widget);
+        }
+      }
     }
 
     scanAll();
 
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.type === "attributes" && mutation.attributeName === "class") {
-          const node = mutation.target;
-          if (node.classList && node.classList.contains("jp-Notebook-cell")) {
-            syncBadges(node);
-          }
-        }
-        if (mutation.type === "childList") {
-          for (const added of mutation.addedNodes) {
-            if (added.nodeType === 1 && added.classList && added.classList.contains("jp-Notebook-cell")) {
-              syncBadges(added);
-            }
-          }
-        }
-      }
-    });
+    if (notebook.model?.cells?.changed) {
+      notebook.model.cells.changed.connect(() => {
+        window.setTimeout(scanAll, 50);
+      });
+    }
 
-    observer.observe(notebookNode, {
-      attributes: true,
-      attributeFilter: ["class"],
-      childList: true,
-      subtree: true,
-    });
-
-    notebookNode.__nbxBadgeObserver = observer;
+    if (notebook.modelChanged) {
+      notebook.modelChanged.connect(() => {
+        window.setTimeout(scanAll, 100);
+      });
+    }
   }
 
   function installTagBadgesAll(tracker) {
