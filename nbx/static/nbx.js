@@ -314,7 +314,10 @@
     const node = cellWidget.node;
     const tags = getCellTags(cellWidget);
     const isActive = node.classList.contains("jp-mod-active");
-    let bar = node.querySelector("." + TAG_BAR_CLASS);
+    let bar = node.previousElementSibling;
+    if (!bar || !bar.classList.contains(TAG_BAR_CLASS)) {
+      bar = null;
+    }
 
     if (tags.length === 0 && !isActive) {
       if (bar) {
@@ -326,7 +329,7 @@
     if (!bar) {
       bar = document.createElement("div");
       bar.className = TAG_BAR_CLASS;
-      node.appendChild(bar);
+      node.parentNode.insertBefore(bar, node);
     }
 
     bar.innerHTML = "";

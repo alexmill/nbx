@@ -318,9 +318,9 @@ body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
   align-items: center;
   flex-wrap: wrap;
   gap: 5px;
-  position: absolute;
-  top: 6px;
-  left: 8px;
+  width: fit-content;
+  margin: 0 auto -4px;
+  padding: 2px 0;
   z-index: 10;
 }
 
