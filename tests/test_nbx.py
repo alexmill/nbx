@@ -119,7 +119,7 @@ class LauncherTests(unittest.TestCase):
 
         self.assertIn('c.ServerApp.jpserver_extensions = {"nbx": True}', server_config)
         self.assertIn(str(paths.project_root), server_config)
-        self.assertIn(str(paths.package_dir / "templates"), notebook_config)
+        self.assertIn(str(paths.notebook_templates_dir), notebook_config)
         self.assertIn('body[data-jp-theme-name="NBX"]', css)
         self.assertIn(".jp-nbx-toolbar-shell", css)
         self.assertIn('"theme": "NBX"', theme_settings)

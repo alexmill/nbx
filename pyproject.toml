@@ -25,7 +25,6 @@ package-dir = {"" = "."}
 
 [tool.setuptools.package-data]
 nbx = [
-  "templates/*.html",
   "static/*",
   "preview_templates/**/*.j2",
   "preview_templates/**/*.json",

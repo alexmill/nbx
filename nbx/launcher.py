@@ -34,6 +34,25 @@ def _render_runtime_template(template_path: Path, paths: ProjectPaths) -> str:
     return content
 
 
+def _generate_templates(paths: ProjectPaths) -> None:
+    """Generate notebook templates from the installed notebook package, injecting nbx.js."""
+    import notebook
+
+    source_dir = Path(notebook.__file__).resolve().parent / "templates"
+    target_dir = paths.notebook_templates_dir
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    nbx_script = (
+        '<script defer="defer" src="{{ base_url | escape }}'
+        'nbx-preview/assets/nbx.js"></script>'
+    )
+
+    for template_file in source_dir.glob("*.html"):
+        content = template_file.read_text(encoding="utf-8")
+        content = content.replace("</head>", f"{nbx_script}</head>")
+        (target_dir / template_file.name).write_text(content, encoding="utf-8")
+
+
 def _sync_runtime_assets(paths: ProjectPaths) -> None:
     for source in paths.runtime_assets_dir.rglob("*"):
         if source.is_dir():
@@ -66,6 +85,7 @@ def ensure_runtime_directories(paths: ProjectPaths | None = None) -> ProjectPath
         directory.mkdir(parents=True, exist_ok=True)
 
     _sync_runtime_assets(resolved_paths)
+    _generate_templates(resolved_paths)
     return resolved_paths
 
 

@@ -35,7 +35,7 @@ def project_paths(
         data_dir=runtime_dir / "jupyter-data",
         lab_settings_dir=runtime_dir / "jupyterlab-settings",
         workspaces_dir=runtime_dir / "jupyterlab-workspaces",
-        notebook_templates_dir=resolved_package_dir / "templates",
+        notebook_templates_dir=runtime_dir / "templates",
         preview_templates_dir=resolved_package_dir / "preview_templates",
         runtime_assets_dir=resolved_package_dir / "runtime_assets",
         static_dir=resolved_package_dir / "static",
