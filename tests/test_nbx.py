@@ -188,13 +188,28 @@ class PreviewTests(unittest.TestCase):
         self.assertIn("Show code", html)
         self.assertIn("collapsed_code", html)
 
-    def test_nbx_wide_tag_adds_celltag_class(self) -> None:
+    def test_figure_mode_tags_add_celltag_classes(self) -> None:
+        for tag in ("nbx-fig-hero", "nbx-fig-full", "nbx-fig-inset", "nbx-fig-fullscreen"):
+            notebook = nbformat.v4.new_notebook()
+            notebook.metadata["title"] = "Fig Test"
+            notebook.cells = [nbformat.v4.new_code_cell("plot()")]
+            notebook.cells[0].metadata["tags"] = [tag]
+
+            with tempfile.TemporaryDirectory() as temp_dir:
+                project_root = Path(temp_dir)
+                notebook_path = project_root / "post.ipynb"
+                nbformat.write(notebook, notebook_path)
+                paths = project_paths(project_root=project_root, package_dir=PACKAGE_DIR)
+
+                html = render_notebook_preview(notebook_path.name, paths=paths)
+
+            self.assertIn(f"celltag_{tag}", html, f"Missing class for {tag}")
+
+    def test_cell_metadata_caption_renders_figcaption(self) -> None:
         notebook = nbformat.v4.new_notebook()
-        notebook.metadata["title"] = "Wide Test"
-        notebook.cells = [
-            nbformat.v4.new_code_cell("make_plot()"),
-        ]
-        notebook.cells[0].metadata["tags"] = ["nbx-wide"]
+        notebook.metadata["title"] = "Caption Test"
+        notebook.cells = [nbformat.v4.new_code_cell("plot()")]
+        notebook.cells[0].metadata["caption"] = "Monthly revenue by segment"
 
         with tempfile.TemporaryDirectory() as temp_dir:
             project_root = Path(temp_dir)
@@ -204,7 +219,9 @@ class PreviewTests(unittest.TestCase):
 
             html = render_notebook_preview(notebook_path.name, paths=paths)
 
-        self.assertIn("celltag_nbx-wide", html)
+        self.assertIn("<figure", html)
+        self.assertIn("<figcaption", html)
+        self.assertIn("Monthly revenue by segment", html)
 
     def test_nbx_hide_input_tag_adds_celltag_class(self) -> None:
         notebook = nbformat.v4.new_notebook()

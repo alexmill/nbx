@@ -305,10 +305,16 @@ body[data-jp-theme-name="NBX"] .jp-RenderedHTML img {
   border-radius: 10px;
 }
 
-/* --- Wide/breakout cells (nbx-wide tag) --- */
+/* --- Figure mode cells in editor --- */
 
+body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-fig-hero,
+body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-fig-fullscreen,
 body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-wide {
   width: min(100% - 64px, 1400px);
+}
+
+body[data-jp-theme-name="NBX"] .jp-Cell.celltag_nbx-fig-inset {
+  width: min(100% - 64px, 560px);
 }
 
 /* --- Cell tag bar --- */

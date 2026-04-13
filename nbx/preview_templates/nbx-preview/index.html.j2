@@ -7,6 +7,7 @@
 
 {%- block any_cell scoped -%}
   {%- set tags = cell.metadata.get('tags', []) -%}
+  {%- set caption = cell.metadata.get('caption', '') -%}
   {%- if 'nbx-hide' in tags -%}
   {%- elif 'nbx-collapse' in tags -%}
     <details class="nbx-collapsed-cell">
@@ -15,6 +16,11 @@
       </summary>
       {{ super() }}
     </details>
+  {%- elif caption -%}
+    <figure class="nbx-figure">
+      {{ super() }}
+      <figcaption class="nbx-figcaption">{{ caption | e }}</figcaption>
+    </figure>
   {%- else -%}
     {{ super() }}
   {%- endif -%}
@@ -37,10 +43,32 @@
   </section>
 </main>
 <script>
-document.querySelectorAll('.celltag_nbx-wide').forEach(function(el) {
-  el.style.width = 'min(96vw, 1400px)';
-  el.style.maxWidth = 'none';
-});
+(function() {
+  var modes = {
+    'celltag_nbx-fig-hero':       'min(96vw, 1400px)',
+    'celltag_nbx-fig-full':       'min(100%, 940px)',
+    'celltag_nbx-fig-inset':      'min(100%, 560px)',
+    'celltag_nbx-fig-fullscreen': '100vw',
+    'celltag_nbx-wide':           'min(96vw, 1400px)'
+  };
+  document.querySelectorAll('[class*="celltag_nbx-fig-"], .celltag_nbx-wide').forEach(function(el) {
+    for (var cls in modes) {
+      if (el.classList.contains(cls)) {
+        el.style.width = modes[cls];
+        el.style.maxWidth = 'none';
+        return;
+      }
+    }
+    for (var i = 0; i < el.classList.length; i++) {
+      var m = el.classList[i].match(/^celltag_nbx-fig-max-(\d+)px$/);
+      if (m) {
+        el.style.width = 'min(96vw, ' + m[1] + 'px)';
+        el.style.maxWidth = 'none';
+        return;
+      }
+    }
+  });
+})();
 </script>
 </body>
 {% endblock body_footer %}

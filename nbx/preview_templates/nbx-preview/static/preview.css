@@ -237,9 +237,9 @@ body.nbx-published {
   display: none;
 }
 
-/* --- Wide/breakout cells (nbx-wide tag) --- */
+/* --- Figure modes — common chrome strip for all nbx-fig-* cells --- */
 
-.nbx-published .celltag_nbx-wide {
+.nbx-published [class*="celltag_nbx-fig-"] {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -249,13 +249,13 @@ body.nbx-published {
   box-shadow: none;
 }
 
-.nbx-published .celltag_nbx-wide > .jp-Cell-outputWrapper,
-.nbx-published .celltag_nbx-wide .jp-OutputArea,
-.nbx-published .celltag_nbx-wide .jp-OutputArea-output {
+.nbx-published [class*="celltag_nbx-fig-"] > .jp-Cell-outputWrapper,
+.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea,
+.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-output {
   overflow: visible;
 }
 
-.nbx-published .celltag_nbx-wide .jp-OutputArea-child {
+.nbx-published [class*="celltag_nbx-fig-"] .jp-OutputArea-child {
   border: none;
   padding: 0;
   margin: 0;
@@ -263,12 +263,32 @@ body.nbx-published {
   background: none;
 }
 
-.nbx-published .celltag_nbx-wide .jp-RenderedImage img,
-.nbx-published .celltag_nbx-wide .jp-RenderedSVG img,
-.nbx-published .celltag_nbx-wide .jp-RenderedHTML img {
+.nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedImage img,
+.nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedSVG img,
+.nbx-published [class*="celltag_nbx-fig-"] .jp-RenderedHTML img {
   width: 100%;
   max-width: 100%;
   border-radius: 14px;
+}
+
+/* --- Figure captions --- */
+
+.nbx-figure {
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+.nbx-figure > .jp-Notebook-cell {
+  margin-bottom: 0;
+}
+
+.nbx-figcaption {
+  max-width: 640px;
+  margin: 10px auto 0;
+  padding: 0 16px;
+  color: #6f7b82;
+  font: italic 0.92rem/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
 }
 
 @media (max-width: 900px) {

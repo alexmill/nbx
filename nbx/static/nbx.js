@@ -149,7 +149,10 @@
     { id: "nbx-collapse", label: "Collapse" },
     { id: "nbx-hide-input", label: "Hide input" },
     { id: "nbx-hide-output", label: "Hide output" },
-    { id: "nbx-wide", label: "Wide" },
+    { id: "nbx-fig-hero", label: "Fig hero" },
+    { id: "nbx-fig-full", label: "Fig full" },
+    { id: "nbx-fig-inset", label: "Fig inset" },
+    { id: "nbx-fig-fullscreen", label: "Fig fullscreen" },
   ];
 
   const TAG_BAR_CLASS = "nbx-tag-bar";
