@@ -15,6 +15,7 @@ body.nbx-published {
   width: min(100vw - 48px, 1600px);
   margin: 0 auto;
   padding: 64px 0 120px;
+  overflow: visible;
 }
 
 .nbx-published-canvas {
@@ -239,7 +240,10 @@ body.nbx-published {
 /* --- Wide/breakout cells (nbx-wide tag) --- */
 
 .nbx-published .celltag_nbx-wide {
-  width: 100%;
+  width: 96vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   overflow: visible;
   border: none;
   background: none;
