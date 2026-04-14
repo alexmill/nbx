@@ -154,7 +154,7 @@ def tag_all_hidden(notebook_path: Path) -> None:
         if cell.cell_type != "code":
             continue
         tags = list(cell.metadata.get("tags", []))
-        if "nbx-hide" in tags:
+        if any(t.startswith("nbx-") for t in tags):
             continue
         tags.append("nbx-hide")
         cell.metadata["tags"] = tags
@@ -163,8 +163,32 @@ def tag_all_hidden(notebook_path: Path) -> None:
     print(f"Tagged {sum(1 for c in notebook.cells if c.cell_type == 'code')} code cells with nbx-hide")
 
 
+HELP_TEXT = """\
+nbx — a shareable notebook shell for Jupyter
+
+Commands:
+  nbx [notebook.ipynb]                  Launch the notebook editor
+  nbx render <notebook.ipynb>           Render notebook to static HTML
+  nbx render <notebook.ipynb> --watch   Render and re-render on every save
+  nbx render <notebook.ipynb> -o FILE   Render to a custom output path
+  nbx hide-all <notebook.ipynb>         Tag all code cells with nbx-hide
+  nbx help                              Show this help message
+
+Configuration:
+  Place an nbx.json in the project root to configure fonts, etc.
+  See https://github.com/alexmill/nbx for details.
+"""
+
+
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
+
+    if not args or (len(args) == 1 and args[0] in ("help", "-h", "--help")):
+        if not args:
+            pass  # fall through to launch editor
+        else:
+            print(HELP_TEXT)
+            return 0
 
     if args and args[0] == "render":
         render_args = args[1:]
